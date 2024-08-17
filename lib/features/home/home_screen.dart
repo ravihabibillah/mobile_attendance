@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mobile_attendance/features/attendance/presentation/ui/live_attendance_screen.dart';
 import 'package:mobile_attendance/features/location/presentation/ui/add_location_screen.dart';
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
@@ -40,7 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Center(
               child: CustomButton(
             text: 'Live Attendance',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const LiveAttendanceScreen();
+              }));
+            },
           )),
         ));
   }

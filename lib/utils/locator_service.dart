@@ -47,4 +47,26 @@ class LocatorService {
       debugPrint(e);
     });
   }
+
+  Future<bool> checkInAreaOrNot({
+    required double allowedDistance,
+    required double pinLatitude,
+    required double pinLongitude,
+  }) async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    double distanceInMeters = Geolocator.distanceBetween(
+      pinLatitude,
+      pinLongitude,
+      position.latitude,
+      position.longitude,
+    );
+
+    if (distanceInMeters > allowedDistance) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
