@@ -53,17 +53,18 @@ class LocatorService {
     required double pinLatitude,
     required double pinLongitude,
   }) async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    double distanceInMeters = Geolocator.distanceBetween(
+    int distanceInKilometers = (Geolocator.distanceBetween(
       pinLatitude,
       pinLongitude,
-      position.latitude,
-      position.longitude,
-    );
+      currentPosition!.latitude,
+      currentPosition!.longitude,
+    )).toInt();
 
-    if (distanceInMeters > allowedDistance) {
+    print('Jarak lokasi saat ini dengan pinned location adalah ' +
+        distanceInKilometers.toString() +
+        ' Meter');
+
+    if (distanceInKilometers < allowedDistance) {
       return true;
     } else {
       return false;
