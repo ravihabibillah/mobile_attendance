@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: HomeScreen(),
+      home: const HomeScreen(),
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
     );

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mobile_attendance/features/attendance/binding/add_location_binding.dart';
 import 'package:mobile_attendance/features/attendance/binding/live_attendance_binding.dart';
 import 'package:mobile_attendance/features/attendance/presentation/ui/add_location_screen.dart';
 import 'package:mobile_attendance/features/attendance/presentation/ui/live_attendance_screen.dart';
@@ -21,6 +22,7 @@ class AppPages {
       page: () => const HomeScreen(),
     ),
     GetPage(
+      binding: AddLocationBinding(),
       name: _Paths.addPinnedLocation,
       page: () => const AddLocationScreen(),
     ),

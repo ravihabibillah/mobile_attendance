@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobile_attendance/features/attendance/controllers/add_location_controller.dart';
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
 import 'package:mobile_attendance/utils/loading_dialog.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
@@ -11,10 +13,11 @@ class AddLocationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Daftarkan Lokasi Absensi'),
-        ),
-        body: const CustomSFMaps());
+      appBar: AppBar(
+        title: const Text('Daftarkan Lokasi Absensi'),
+      ),
+      body: const CustomSFMaps(),
+    );
   }
 }
 
@@ -26,25 +29,10 @@ class CustomSFMaps extends StatefulWidget {
 }
 
 class _CustomSFMapsState extends State<CustomSFMaps> {
-  late List<MapLatLng> mapMarkers;
-  late MapLatLng marker;
-  late MapTileLayerController mapController;
+  final controller = Get.find<AddLocationController>();
 
   @override
   void initState() {
-    var locatorServicePosition = LocatorService.currentPosition!;
-    mapController = MapTileLayerController();
-    marker = MapLatLng(
-        locatorServicePosition.latitude,
-        // ?? -6.2088,
-        locatorServicePosition.longitude
-        // ?? 106.8456
-        );
-    mapMarkers = <MapLatLng>[
-      marker,
-      // MapLatLng(28.7041, 77.1025) // India
-    ];
-
     super.initState();
   }
 
@@ -53,32 +41,21 @@ class _CustomSFMapsState extends State<CustomSFMaps> {
     return Stack(
       children: [
         Listener(
-          onPointerUp: (event) {
-            final RenderBox markerRenderBox =
-                context.findRenderObject()! as RenderBox;
-            // To obtain the maps local point, we have converted the global
-            // point into local point using the marker render box. After that
-            // we have converted that point into latlng and updated it’s
-            // position.
-            final MapLatLng latLng = mapController.pixelToLatLng(
-              markerRenderBox.globalToLocal(event.position),
-            );
-            mapMarkers[0] = MapLatLng(latLng.latitude, latLng.longitude);
-            mapController.updateMarkers([0]);
-          },
+          onPointerUp: (event) => controller.setPinLocation(context, event),
           child: SfMaps(
             layers: [
               MapTileLayer(
                 initialZoomLevel: 15,
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                controller: mapController,
-                initialMarkersCount: mapMarkers.length,
-                initialFocalLatLng: marker,
+                controller: controller.mapController,
+                initialMarkersCount: controller.mapMarkers.length,
+                initialFocalLatLng: controller.initialMarker,
                 zoomPanBehavior: MapZoomPanBehavior(),
                 markerBuilder: (BuildContext context, int index) {
+                  var mapMarker = controller.mapMarkers[index];
                   return MapMarker(
-                    longitude: mapMarkers[index].longitude,
-                    latitude: mapMarkers[index].latitude,
+                    longitude: mapMarker.longitude,
+                    latitude: mapMarker.latitude,
                     child: GestureDetector(
                       child: const Icon(
                         Icons.location_on,
@@ -101,31 +78,9 @@ class _CustomSFMapsState extends State<CustomSFMaps> {
             child: CustomButton(
               text: 'Simpan Lokasi',
               onPressed: () {
-                LoadingScreen.show(context, 'Mohon Tunggu sebentar..');
-
-                CollectionReference collectionReference = FirebaseFirestore
-                    .instance
-                    .collection('attendance_location');
-
-                collectionReference.doc('hcUnodxIEHDZrKAuaDpk').update({
-                  'latitude': mapMarkers[0].latitude,
-                  'longitude': mapMarkers[0].longitude,
-                }).then((_) {
-                  LoadingScreen.hide(context);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Colors.green.shade300,
-                      content: const Text('Attendance Location Pin Saved')));
-                }).catchError((error) {
-                  LoadingScreen.hide(context);
-                  Navigator.pop(context);
-
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Colors.red.shade300,
-                      content: const Text(
-                        'Failed to Save Attendance Location Pin ',
-                      )));
-                });
+                controller.saveLocation(
+                  context,
+                );
               },
             ),
           ),
