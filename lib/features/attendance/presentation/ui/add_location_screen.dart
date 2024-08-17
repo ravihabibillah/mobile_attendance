@@ -4,6 +4,10 @@ import 'package:mobile_attendance/features/attendance/controllers/add_location_c
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
+/// `AddLocationScreen` adalah halaman yang memungkinkan pengguna untuk mendaftarkan
+/// lokasi baru dengan memilih lokasi pada peta
+///
+/// catatan: hanya bisa mendaftarkan satu lokasi.
 class AddLocationScreen extends StatelessWidget {
   const AddLocationScreen({super.key});
 
@@ -13,32 +17,27 @@ class AddLocationScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Daftarkan Lokasi Absensi'),
       ),
-      body: const CustomSFMaps(),
+      body: CustomSFMaps(),
     );
   }
 }
 
-class CustomSFMaps extends StatefulWidget {
-  const CustomSFMaps({super.key});
+/// `CustomSFMaps` adalah widget yang menampilkan peta dan memungkinkan pengguna
+/// untuk menambahkan lokasi baru dengan memilih titik pada peta.
+class CustomSFMaps extends StatelessWidget {
+  CustomSFMaps({super.key});
 
-  @override
-  State<CustomSFMaps> createState() => _CustomSFMapsState();
-}
-
-class _CustomSFMapsState extends State<CustomSFMaps> {
+  // Mengambil instance dari `AddLocationController` menggunakan GetX.
   final controller = Get.find<AddLocationController>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Listener untuk menangani interaksi dengan peta.
         Listener(
-          onPointerUp: (event) => controller.setPinLocation(context, event),
+          onPointerUp: (event) => controller.setPinLocation(
+              context, event), // Akshi Untuk melakukan set pin pada peta
           child: SfMaps(
             layers: [
               MapTileLayer(
@@ -66,6 +65,7 @@ class _CustomSFMapsState extends State<CustomSFMaps> {
             ],
           ),
         ),
+        // Tombol untuk menyimpan lokasi yang ditempatkan di bawah layar.
         Positioned(
           bottom: 0,
           left: 0,
@@ -75,9 +75,8 @@ class _CustomSFMapsState extends State<CustomSFMaps> {
             child: CustomButton(
               text: 'Simpan Lokasi',
               onPressed: () {
-                controller.saveLocation(
-                  context,
-                );
+                // Memanggil fungsi untuk menyimpan lokasi ketika tombol ditekan.
+                controller.saveLocation(context);
               },
             ),
           ),

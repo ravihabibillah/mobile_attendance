@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// `LoadingScreen` adalah kelas yang menyediakan metode untuk menampilkan
+/// dan menyembunyikan layar loading (dialog) dengan pesan kustom di aplikasi.
 class LoadingScreen {
+  // Private constructor untuk mencegah pembuatan instance dari kelas ini.
   LoadingScreen._();
 
+  /// Menampilkan dialog loading dengan pesan kustom yang tidak bisa ditutup
+  /// dengan menekan di luar dialog (non-dismissible).
+  ///
+  /// `text` adalah pesan yang akan ditampilkan di dalam dialog.
   static show(BuildContext context, String text) {
     return showDialog(
         context: context,
@@ -16,14 +23,15 @@ class LoadingScreen {
         });
   }
 
+  /// Menyembunyikan dialog loading yang sedang ditampilkan.
   static hide(BuildContext context) {
     Navigator.pop(context);
   }
 
-  // static hide2(BuildContext context) {
-  //   context.pop(context);
-  // }
-
+  /// Membangun tampilan dialog kustom yang berisi indikator loading
+  /// dan teks pesan.
+  ///
+  /// [text] adalah pesan yang akan ditampilkan di dalam dialog.
   static _customDialog(BuildContext context, String text) {
     return Center(
       child: Container(

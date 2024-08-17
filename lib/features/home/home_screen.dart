@@ -4,6 +4,8 @@ import 'package:mobile_attendance/config/app_pages.dart';
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
 
+/// `HomeScreen` adalah layar utama aplikasi yang menampilkan antarmuka untuk
+/// menavigasi ke halaman lain seperti "Live Attendance" dan menambahkan lokasi pin.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    // service lokasi dijalankan untuk mendapatkan posisi pengguna saat ini.
     LocatorService().getCurrentPosition(context);
     super.initState();
   }
@@ -23,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
           // Judul Aplikasi
-          title: const Text('Mobile Attendance'),
+          title: const Text('Mobile Attendance'), // Judul aplikasi di AppBar.
         ),
         // Tombol Untuk Menambahkan Lokasi Baru
         floatingActionButton: FloatingActionButton.extended(
@@ -36,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           backgroundColor: Colors.orange.shade400,
           onPressed: () {
+            // Navigasi ke halaman "Tambahkan Lokasi" ketika tombol ditekan.
             Get.toNamed(Routes.addPinnedLocation);
           },
         ),
@@ -46,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomButton(
             text: 'Live Attendance',
             onPressed: () {
+              // Navigasi ke halaman "Live Attendance" ketika tombol ditekan.
               Get.toNamed(Routes.liveAttendance);
             },
           )),

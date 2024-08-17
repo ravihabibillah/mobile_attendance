@@ -1,32 +1,25 @@
-// To parse this JSON data, do
-//
-//     final locationPinned = locationPinnedFromJson(jsonString);
-
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-LocationPinned locationPinnedFromJson(String str) =>
-    LocationPinned.fromJson(json.decode(str));
-
-String locationPinnedToJson(LocationPinned data) => json.encode(data.toJson());
-
+/// `LocationPinned` adalah model data yang mewakili lokasi yang dipin
+/// dengan informasi latitude dan longitude. Kelas ini juga menyediakan
+/// metode untuk konversi data dari dan ke format yang digunakan dalam
+/// Firestore.
 class LocationPinned {
-  double? latitude;
-  double? longitude;
+  double? latitude; // Latitude lokasi yang dipin.
+  double? longitude; // Longitude lokasi yang dipin.
 
   LocationPinned({
     this.latitude,
     this.longitude,
   });
 
-  factory LocationPinned.fromJson(Map<String, dynamic> json) => LocationPinned(
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-      );
-
+  /// Membuat instance `LocationPinned` dari `DocumentSnapshot` Firestore.
+  ///
+  /// Metode ini digunakan untuk mengonversi data dokumen Firestore ke dalam
+  /// format objek `LocationPinned`.
   factory LocationPinned.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
+    // Mengambil data dari dokumen Firestore.
     final data = document.data()!;
 
     return LocationPinned(
@@ -35,6 +28,10 @@ class LocationPinned {
     );
   }
 
+  /// Mengonversi instance `LocationPinned` menjadi format JSON.
+  ///
+  /// Metode ini digunakan untuk menyimpan data `LocationPinned` ke Firestore
+  /// dalam format yang dapat dipahami oleh Firestore.
   Map<String, dynamic> toJson() => {
         "latitude": latitude.toString(),
         "longitude": longitude.toString(),

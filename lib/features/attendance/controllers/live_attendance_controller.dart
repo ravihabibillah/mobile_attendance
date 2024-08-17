@@ -6,16 +6,50 @@ import 'package:get/get.dart';
 import 'package:mobile_attendance/features/attendance/models/location_pinned.dart';
 import 'package:mobile_attendance/utils/custom_dialog.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
+/// `LiveAttendanceController` adalah controller yang mengelola logika
+/// untuk layar absensi langsung, termasuk mengambil lokasi yang dipin
+/// dan memeriksa apakah pengguna berada di lokasi yang benar.
 class LiveAttendanceController extends GetxController {
+  // untuk Menyimpan informasi lokasi yang dipin.
   LocationPinned pinnedLocation = LocationPinned(
     latitude: 0,
     longitude: 0,
   );
 
+  // untuk Menyimpan status loading dan data.
   var isLoading = true.obs;
   var hasData = false.obs;
 
+  // Daftar marker peta dan controller untuk peta.
+  late List<MapLatLng> mapMarkers;
+  late MapLatLng initialMarker;
+  late MapTileLayerController mapController;
+
+  @override
+  void onInit() async {
+    // Mengambil lokasi yang dipin saat inisialisasi controller.
+    await getPinnedLocation();
+
+    // Mendapatkan posisi saat ini dari `LocatorService`.
+    var locatorServicePosition = LocatorService.currentPosition!;
+
+    // Inisialisasi controller peta dan marker.
+    mapController = MapTileLayerController();
+    initialMarker = MapLatLng(
+        locatorServicePosition.latitude, locatorServicePosition.longitude);
+    mapMarkers = <MapLatLng>[
+      initialMarker,
+      MapLatLng(pinnedLocation.latitude!, pinnedLocation.longitude!)
+    ];
+    super.onInit();
+  }
+
+  /// Mengambil lokasi yang dipin dari Firestore.
+  ///
+  /// Metode ini membaca data dari collection `attendance_location` di Firestore,
+  /// kemudian memperbarui `pinnedLocation` dengan data yang diambil.
   getPinnedLocation() async {
     try {
       final snapshots = await FirebaseFirestore.instance
@@ -36,6 +70,11 @@ class LiveAttendanceController extends GetxController {
     }
   }
 
+  /// Memeriksa apakah pengguna berada di dalam area lokasi yang dipin.
+  ///
+  /// Menggunakan `LocatorService` untuk memeriksa jarak antara lokasi
+  /// pengguna saat ini dengan lokasi yang dipin. Menampilkan dialog
+  /// yang sesuai berdasarkan hasil pengecekan.
   checkLocation(BuildContext context) async {
     var isInLocation = await LocatorService().checkInAreaOrNot(
         allowedDistance: 50,
@@ -55,11 +94,5 @@ class LiveAttendanceController extends GetxController {
         details: 'Kamu berada lebih dari 50 meter dari lokasi absen.',
       );
     }
-  }
-
-  @override
-  void onInit() {
-    getPinnedLocation();
-    super.onInit();
   }
 }

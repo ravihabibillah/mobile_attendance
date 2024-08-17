@@ -10,22 +10,28 @@ part 'app_routes.dart';
 /// Kelas ini digunakan untuk mendaftarkan `Page` dan `Route`
 /// ke Aplikasi.
 class AppPages {
+  // Private constructor untuk mencegah pembuatan instance dari kelas ini.
   AppPages._();
 
   // Ini adalah inisialisasi route awal yang akan ditampilkan
   static const initial = Routes.home;
 
-  // List Page
+  // List dari GetPage yang merepresentasikan halaman dan route yang tersedia di aplikasi.
   static final routes = [
+    // Definisi route untuk halaman HomeScreen.
     GetPage(
       name: _Paths.home,
       page: () => const HomeScreen(),
     ),
+
+    // Definisi route untuk halaman AddLocationScreen.
     GetPage(
       binding: AddLocationBinding(),
       name: _Paths.addPinnedLocation,
       page: () => const AddLocationScreen(),
     ),
+
+    // Definisi route untuk halaman LiveAttendanceScreen.
     GetPage(
       binding: LiveAttendanceBinding(),
       name: _Paths.liveAttendance,
