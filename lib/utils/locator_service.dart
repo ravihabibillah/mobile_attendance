@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -59,10 +61,6 @@ class LocatorService {
       currentPosition!.latitude,
       currentPosition!.longitude,
     )).toInt();
-
-    print('Jarak lokasi saat ini dengan pinned location adalah ' +
-        distanceInKilometers.toString() +
-        ' Meter');
 
     if (distanceInKilometers < allowedDistance) {
       return true;

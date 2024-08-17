@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_attendance/features/attendance/controllers/add_location_controller.dart';
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
-import 'package:mobile_attendance/utils/loading_dialog.dart';
-import 'package:mobile_attendance/utils/locator_service.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
 class AddLocationScreen extends StatelessWidget {

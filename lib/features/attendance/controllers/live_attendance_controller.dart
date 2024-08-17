@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_attendance/features/attendance/models/location_pinned.dart';
 import 'package:mobile_attendance/utils/custom_dialog.dart';
-import 'package:mobile_attendance/utils/loading_dialog.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
 
 class LiveAttendanceController extends GetxController {
