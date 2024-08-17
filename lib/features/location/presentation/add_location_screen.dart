@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:mobile_attendance/shared_widgets/custom_button.dart';
-import 'package:mobile_attendance/shared_widgets/custom_textformfield.dart';
+import 'package:mobile_attendance/utils/loading_dialog.dart';
 import 'package:mobile_attendance/utils/locator_service.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -32,7 +31,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
         appBar: AppBar(
           title: const Text('Daftarkan Lokasi Absensi'),
         ),
-        body: CustomSFMaps()
+        body: const CustomSFMaps()
         // Column(
         //   children: [
         //     Form(
@@ -179,7 +178,33 @@ class _CustomSFMapsState extends State<CustomSFMaps> {
             padding: const EdgeInsets.all(16.0),
             child: CustomButton(
               text: 'Simpan Lokasi',
-              onPressed: () {},
+              onPressed: () {
+                LoadingScreen.show(context, 'Mohon Tunggu sebentar..');
+
+                CollectionReference collectionReference = FirebaseFirestore
+                    .instance
+                    .collection('attendance_location');
+
+                collectionReference.doc('hcUnodxIEHDZrKAuaDpk').update({
+                  'latitude': mapMarkers[0].longitude,
+                  'longitude': mapMarkers[0].longitude,
+                }).then((_) {
+                  LoadingScreen.hide(context);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.green.shade300,
+                      content: const Text('Attendance Location Pin Saved')));
+                }).catchError((error) {
+                  LoadingScreen.hide(context);
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.red.shade300,
+                      content: const Text(
+                        'Failed to Save Attendance Location Pin ',
+                      )));
+                });
+              },
             ),
           ),
         )
