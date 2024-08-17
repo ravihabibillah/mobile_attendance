@@ -26,12 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text('Mobile Attendance'),
         ),
         // Tombol Untuk Menambahkan Lokasi Baru
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_location),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Row(
+            children: [
+              Icon(Icons.add_location),
+              SizedBox(width: 8),
+              Text('Tambahkan Pin Lokasi')
+            ],
+          ),
+          backgroundColor: Colors.orange.shade400,
           onPressed: () {
             Get.toNamed(Routes.addPinnedLocation);
           },
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Center(
